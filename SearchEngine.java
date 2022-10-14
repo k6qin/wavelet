@@ -3,27 +3,28 @@ import java.net.URI;
 import java.util.ArrayList;
 
 class Handler implements URLHandler {
-// The one bit of state on the server: a number that will be manipulated by
-// various requests.
-int num = 0;
+    // The one bit of state on the server: a number that will be manipulated by
+    // various requests.
+    int num = 0;
+    // initialize two arraylists for adding and querying //
+    ArrayList<String> list = new ArrayList<>();
+    ArrayList<String> query_list = new ArrayList<>();
 
     public String handleRequest(URI url) {
         if (url.getPath().equals("/")) {
             return String.format("Number: %d", num);
-        } 
+        }
         else {
             System.out.println("Path: " + url.getPath());
             // adding new strings to the list //
-            ArrayList<String> list = new ArrayList<>();
             if (url.getPath().contains("/add")) {
                 String[] parameters = url.getQuery().split("=");
                 if (parameters[0].equals("s")) {
                     list.add(parameters[1]);
+                    return list.toString();
                 }
-                return list.toString();
             }
             // querying the list and searching for substrings //
-            ArrayList<String> query_list = new ArrayList<>();
             if (url.getPath().contains("/search")) {
                 String[] parameters = url.getQuery().split("=");
                 if (parameters[0].equals("s")) {
@@ -32,13 +33,13 @@ int num = 0;
                             query_list.add(s);
                         }
                     }
+                    return query_list.toString();
                 }
             }
-            return query_list.toString();
+            return "404 Not Found!";
         }
     }
 }
-
 
 class SearchEngine {
     public static void main(String[] args) throws IOException {
